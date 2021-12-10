@@ -104,7 +104,9 @@ public class MEE {
      * @return
      */
     public boolean transfere(MEE e, int i){
-        e.ajoute(i);
+        e.ajoute();
+        tabFreq[i]--;
+        
         return true;
     }
     /**
