@@ -36,7 +36,7 @@ public class Case {
     /**
     * pré-requis : let est une lettre majuscule
     */
-    static boolean estMajuscule(char ch){
+   /* static boolean estMajuscule(char ch){
         int ascii = (int) ch;
         //[A..Z]
         if((ascii>=65 && ascii<=90) 
@@ -44,7 +44,7 @@ public class Case {
            || (ascii>=192 && ascii<=223))
          return true;
         return false;
-    }
+    }*/
     public void setLettre (char let){
         if(Character.toUpperCase(Let)==true){
 
