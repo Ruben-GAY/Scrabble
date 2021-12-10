@@ -37,7 +37,7 @@ public class MEE {
         this.nbToEx=e.nbToEx;
     }
 
-
+    /*
     public int getNbToEx(){
         //question par rapport au get
         int compteur = 0;
@@ -47,6 +47,7 @@ public class MEE {
         this.nbToEx=compteur;
         return this.nbToEx;
     }
+    */
 
     //-----------methode-------------
     /**
@@ -79,7 +80,7 @@ public class MEE {
     */
     public boolean retire (int i) {
         boolean retire = false;
-        if(i>=0 && i<26 && this.tabFreq[i]>0){
+        if(i>=0 && i<this.tabFreq.length && this.tabFreq[i]>0){
             this.tabFreq[i]--;
             retire = true;
         }
@@ -91,7 +92,7 @@ public class MEE {
     * et le retourne
     */
     public int retireAleat () {
-        int[] tab=new int[this.tabFreq.length];
+        int[] tab=new int[this.tabFreq.length]; // Création d'un tableau qui va stocker les indexes des valeurs de this >0
         int indexTabAjoute=0;
         int alea=0;
         if(this.estVide()==false){
@@ -178,6 +179,12 @@ public class MEE {
         }
         return sommeV;
     }
+    */
+    /**
+    * pré-requis : tabFreq.length <= v.length
+    * résultat : retourne la somme des valeurs des exemplaires des
+    * éléments de this, la valeur d’un exemplaire d’un élément i
+    * de this étant égale à v[i]
     */
     public int sommeValeurs (int[] v){
         int sommeV=0;
