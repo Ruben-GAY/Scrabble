@@ -2,9 +2,9 @@
 
 public class Case {
     
-    private static int[] nbPointsJeton={1,3,3,2,1,4,2,4,1,8,10,1,2,1,1,3,8,1,1,1,1,4,10,10,10,10};
+    //private static int[] nbPointsJeton={1,3,3,2,1,4,2,4,1,8,10,1,2,1,1,3,8,1,1,1,1,4,10,10,10,10};
     private int couleur;
-    private boolean caseStatue; // true =recouverte  false = libre
+    private boolean caseStatue=false; // true =recouverte  false = libre
     private char lettre;
 
 
@@ -15,9 +15,9 @@ public class Case {
     * action : constructeur de Case
     */
     public Case(int uneCouleur){
-        if(uneCouleur>=1 && uneCouleur<=5){
-            this.couleur= uneCouleur;
-        }
+        this.couleur= uneCouleur;
+        this.caseStatue=caseStatue;
+        this.lettre=lettre;
     }
     /**
     * résultat : la couleur de this, un nombre entre 1 et 5
@@ -25,22 +25,24 @@ public class Case {
     public int getCouleur (){
         return this.couleur;
     }
+
     /**
     * pré-requis : cette case est recouverte
     */
     public char getLettre (){
-        if(caseStatue==true){ 
-            return this.lettre;
-        }
+        //if(caseStatue==true){ 
+            //return this.lettre;
+        //}
+        return this.lettre;
     }
 
     /**
     * pré-requis : let est une lettre majuscule
     */
     public void setLettre (char let){
-        if(Character.isUpperCase(let)==true){
-            this.lettre=let;
-        }
+        this.lettre=Character.toUpperCase(let);
+        this.caseStatue=true;
+        
     }
     /**
     * résultat : vrai ssi la case est recouverte par une lettre
@@ -54,7 +56,7 @@ public class Case {
     }
 
     public String toString(){
-        return "couleur : "+couleur+", "+"statue : "+caseStatue+", " + "lettre : " +lettre;
+        return couleur+"";
     }
 }
 

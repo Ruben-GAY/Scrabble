@@ -11,10 +11,7 @@ public class MEE {
     * inférieurs à max
     */
     public MEE (int max){
-        if(max>=0){
             this.tabFreq=new int[max];
-        }
-        
     }
 
     /**
@@ -31,15 +28,16 @@ public class MEE {
     /**
     * constructeur par copie
     */
-
     public MEE(MEE e){
-        this.tabFreq=e.tabFreq;
+        
         this.nbToEx=e.nbToEx;
+        this.tabFreq=new int[e.getTabFreq().length];
+        for(int i =0;i<e.getTabFreq().length;i++){
+            this.tabFreq[i]=e.tabFreq[i];
+        }
     }
 
-    /*
     public int getNbToEx(){
-        //question par rapport au get
         int compteur = 0;
         for(int i=0;i<this.tabFreq.length;i++){
             compteur=compteur+this.tabFreq[i];
@@ -47,9 +45,11 @@ public class MEE {
         this.nbToEx=compteur;
         return this.nbToEx;
     }
-    */
 
     //-----------methode-------------
+    public int[] getTabFreq(){
+        return this.tabFreq;
+    }
     /**
     * résultat : vrai ssi cet ensemble est vide
     */
@@ -66,13 +66,9 @@ public class MEE {
     * action : ajoute un exemplaire de i à this
     */
     public void ajoute(int i){
-        if(i>=0 && i<this.tabFreq.length){
-            this.tabFreq[i]++;
-        }
-        else{
-            Ut.afficherSL("impossible");
-        }
+        this.tabFreq[i]++;
     }
+
     /**
     * pré-requis : 0 <= i < tabFreq.length
     * action/résultat : retire un exemplaire de i de this s’il en existe,
@@ -80,10 +76,8 @@ public class MEE {
     */
     public boolean retire (int i) {
         boolean retire = false;
-        if(i>=0 && i<this.tabFreq.length && this.tabFreq[i]>0){
-            this.tabFreq[i]--;
-            retire = true;
-        }
+        this.tabFreq[i]--;
+        retire = true;
         return retire;
     }
     /**
@@ -92,23 +86,18 @@ public class MEE {
     * et le retourne
     */
     public int retireAleat () {
-        int[] tab=new int[this.tabFreq.length]; // Création d'un tableau qui va stocker les indexes des valeurs de this >0
+        int[] tab=new int[this.tabFreq.length];
         int indexTabAjoute=0;
         int alea=0;
-        if(this.estVide()==false){
-            for(int i =0;i<this.tabFreq.length;i++){
-                if(this.tabFreq[i]>0){
-                    tab[indexTabAjoute]=i;
-                    
-                    indexTabAjoute++;
-                    
+        for(int i =0;i<this.tabFreq.length;i++){
+            if(this.tabFreq[i]>0){
+                tab[indexTabAjoute]=i; 
+                indexTabAjoute++;                    
                 }
             }
             alea=Ut.randomMinMax(0, indexTabAjoute-1);
             this.tabFreq[tab[alea]]--;
 
-
-        }
         return tab[alea]; // retire vaut 0 si on décide de retirer à un chevalet/sac vide
     }
     /**
@@ -132,21 +121,32 @@ public class MEE {
     public void transfereAleat (MEE e, int k) {
         //question prof par rapport a k
         int alea;
-        if(k>0){ //k>=0
-            for(int i=0;i<k;i++){
-                if(this.estVide()==false){
-                    alea=this.retireAleat();
-                    e.ajoute(alea);
-                }
+        for(int i=0;i<k;i++){
+            if(this.estVide()==false){
+                alea=this.retireAleat();
+                e.ajoute(alea);
             }
         }
     }
+
     /**
     * pré-requis : tabFreq.length <= v.length
     * résultat : retourne la somme des valeurs des exemplaires des
     * éléments de this, la valeur d’un exemplaire d’un élément i
     * de this étant égale à v[i]
     */
+    public int sommeValeurs (int[] v){
+        int sommeV=0;
+        for(int i=0;i<this.tabFreq.length;i++){
+            if(this.tabFreq[i]>0){
+                sommeV = sommeV + this.tabFreq[i]*v[i];
+            }
+        }
+        return sommeV;
+    }
+
+    //sert à tester la classe MEE
+    
     public String toString(){
         String retourne="[";
         for(int i =0;i<this.tabFreq.length-1;i++){
@@ -155,47 +155,7 @@ public class MEE {
         retourne=retourne+this.tabFreq[this.tabFreq.length-1]+"]";
         return retourne;
     }
-    /**
-    * pré-requis : tabFreq.length <= v.length
-    * résultat : retourne la somme des valeurs des exemplaires des
-    * éléments de this, la valeur d’un exemplaire d’un élément i
-    * de this étant égale à v[i]
-    */
-    /*
-    public int sommeValeurs (int[] v){
-        int sommeV=0;
-        Plateau Plat =new Plateau(); 
-        if(this.tabFreq.length<=v.length){
-            for(int i=0;i<this.tabFreq.length;i++){
-                if(this.tabFreq[i]>0){
-                    v[i]=this.tabFreq[i]*Plat.getNbPointsJeton()[i];
-                }
-            }
-        }
-        for(int i=0;i<v.length;i++){
-            if(v[i]>0){
-                sommeV=sommeV+v[i];
-            }
-        }
-        return sommeV;
-    }
-    */
-    /**
-    * pré-requis : tabFreq.length <= v.length
-    * résultat : retourne la somme des valeurs des exemplaires des
-    * éléments de this, la valeur d’un exemplaire d’un élément i
-    * de this étant égale à v[i]
-    */
-    public int sommeValeurs (int[] v){
-        int sommeV=0;
-        if(this.tabFreq.length<=v.length){
-            for(int i=0;i<this.tabFreq.length;i++){
-                if(this.tabFreq[i]>0){
-                    sommeV = sommeV + this.tabFreq[i]*v[i];
-                }
-            }
-        }
-        return sommeV;
-    }
+    
+    
     
 }
