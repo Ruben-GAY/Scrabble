@@ -73,20 +73,34 @@ public class Plateau {
     *commentaire : l'ensemble copie permet, dans le cas où mot contiendrait une lettre en double mais que le chevalet
     *en contiendrait qu'un examplaire, de ne pas valider le mot
     */
-    public boolean CoherenceMot(String mot,MEE e){
+    public boolean CoherenceMot(String mot,MEE e,int numLig,int numCol,Character sens){
         boolean verif  = true;
-        int indexMot=0;
+        int i=0;
         MEE copie= new MEE(e);
-        while(verif == true && indexMot<mot.length()){
-            if(copie.getTabFreq()[Ut.alphaToIndex(mot.charAt(indexMot))]>0){
-                copie.retire(Ut.alphaToIndex(mot.charAt(indexMot)));
-                indexMot++;
+        switch(sens){
+            case 'h' :
+                while(verif && i <mot.length()){
+                    if(copie.getTabFreq()[Ut.alphaToIndex(mot.charAt(i))]>0 || Character.toUpperCase(mot.charAt(i))==this.g[numLig][numCol+i].getLettre()){
+                        copie.retire(Ut.alphaToIndex(mot.charAt(i)));
+                    }
+                    else{
+                        verif = false;
+                    }
+                    i++;
             }
-            else{
-                verif=false;
+            case 'v' :
+                while(verif && i <mot.length()){
+                    if(copie.getTabFreq()[Ut.alphaToIndex(mot.charAt(i))]>0 || Character.toUpperCase(mot.charAt(i))==this.g[numLig+i][numCol].getLettre()){
+                        copie.retire(Ut.alphaToIndex(mot.charAt(i)));
+                    }
+                    else{
+                        verif = false;
+                    }
+                    i++;
             }
-        }    
-            
+
+        }
+        Ut.afficherSL("cherenceMot : "+verif);
         return verif;
     }
     
@@ -104,38 +118,46 @@ public class Plateau {
 
         switch(sens){
             case'h':
-                while(nonRecouverte==false || verif==false || i==mot.length()-1){
-                    if(this.g[numLig][numCol+i].estRecouverte()==false && nonRecouverte==false){
-                        nonRecouverte=true;
+            Ut.afficherSL("i : "+i);
+                while(i<mot.length()){
+                    Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig][numCol+i].estRecouverte());
+                    if(this.g[numLig][numCol+i].estRecouverte()==false){
+                        nonRecouverte=true;                    
                     }
-                    
                     else if(this.g[numLig][numCol+i].estRecouverte()==true && this.g[numLig][numCol+i].getLettre()==Character.toUpperCase(mot.charAt(i))){
                         verif = true;
                     }
-                    else{
+                    else if(this.g[numLig][numCol+i].estRecouverte()==true && this.g[numLig][numCol+i].getLettre()!=Character.toUpperCase(mot.charAt(i))){
                         verif = false;
                         break;
                     }
+                    
                     i++;
                 }
-                
+                //Ut.afficherSL("je suis sortie de la boucle");
                 break;
             case'v':
-                while(nonRecouverte==false || verif==false || i==mot.length()-1){
+                while(i<mot.length()){
+                    Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig+i][numCol].estRecouverte());
                     if(this.g[numLig+i][numCol].estRecouverte()==false && nonRecouverte==false){
                         nonRecouverte=true;
                     } 
                     else if(this.g[numLig+i][numCol].estRecouverte()==true && this.g[numLig+i][numCol].getLettre()==Character.toUpperCase(mot.charAt(i))){
                         verif = true;
                     }
-                    else{
+                    else if(this.g[numLig][numCol+i].estRecouverte()==true && this.g[numLig][numCol+i].getLettre()!=Character.toUpperCase(mot.charAt(i))){
                         verif = false;
                         break;
                     }
+                    
                     i++;
                 }
                 break;
         }
+        /*
+        Ut.afficherSL("nonRecouverte : "+nonRecouverte);
+        Ut.afficherSL("verif : "+verif);
+        */
         if(nonRecouverte==true && verif==true){
             condition=true;
         }
@@ -170,6 +192,7 @@ public class Plateau {
             break;
 
         }
+        Ut.afficherSL("LibreMot : "+verif);
         return verif;
     }
     
@@ -186,16 +209,16 @@ public class Plateau {
         boolean valide = false;
 
         //-----cas où le plateau est vide-------
-        if(this.g[(this.g.length/2)+1][(this.g.length/2)+1].estRecouverte()==false && mot.length()>2 ){
+        if(this.g[(this.g.length/2)][(this.g.length/2)].estRecouverte()==false && mot.length()>2 ){
             //Ut.afficherSL("ici");
             switch(sens){
                 case 'h':
-                    if(numCol + mot.length()<(this.g.length) && numCol + mot.length()>=(this.g.length/2)+1&& numLig==(this.g.length/2)+1 && CoherenceMot(mot, e)){
+                    if(numCol + mot.length()<(this.g.length) && numCol + mot.length()>=(this.g.length/2)+1&& numLig==(this.g.length/2)+1 && CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
                         valide = true;                       
                     }
                     break;
                 case 'v':
-                    if(numCol==(this.g.length/2)+1 && numLig + mot.length()<(this.g.length) && numLig + mot.length()>=(this.g.length/2)+1&& CoherenceMot(mot, e)){
+                    if(numCol==(this.g.length/2)+1 && numLig + mot.length()<(this.g.length) && numLig + mot.length()>=(this.g.length/2)+1&& CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
                         valide = true;                   
                     }
                     break;
@@ -204,15 +227,17 @@ public class Plateau {
         //-----cas où le plateau n’est pas vide------
         if(this.g[(this.g.length/2)][(this.g.length/2)].estRecouverte()==true){
 
-            if(libreMot(sens, mot, numLig-1, numCol-1)==true && zoneValide(sens, mot, numLig-1, numCol-1)==true && CoherenceMot(mot, e)==true){
+            if(CoherenceMot(mot, e,numLig-1,numCol-1,sens)==true && libreMot(sens, mot, numLig-1, numCol-1)==true && zoneValide(sens, mot, numLig-1, numCol-1)==true ){
                 valide =true;
             }
             //Ut.afficherSL("valide : "+valide);   
             /*
             if(zoneValide(sens, mot, numLig, numCol)==true){
                 Ut.afficherSL("zoneValide : "+true);
+                
             }
             */
+            
         }
         Ut.afficherSL("placementValide : "+valide);
         return valide;
