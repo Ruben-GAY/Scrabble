@@ -42,6 +42,7 @@ public class Case {
     public void setLettre (char let){
         this.lettre=Character.toUpperCase(let);
         this.caseStatue=true;
+        this.couleur= 1;
         
     }
     /**

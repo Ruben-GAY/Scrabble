@@ -100,12 +100,12 @@ public class Plateau {
             }
 
         }
-        Ut.afficherSL("cherenceMot : "+verif);
+        //Ut.afficherSL("cherenceMot : "+verif);
         return verif;
     }
     
     /*
-    *pré-requis : aucun
+    *pré-requis : mot en minuscule
     *résultat : renvoie vrai si pour chaque case recouverte par un jeton de la zone de placement du mot, la lettre du
     *jeton est la même que celle du mot à placer dans cette case et il faut aussi que la zone contient au moins une case
     *découverte et une case non découverte, faux sinon
@@ -118,9 +118,8 @@ public class Plateau {
 
         switch(sens){
             case'h':
-            Ut.afficherSL("i : "+i);
                 while(i<mot.length()){
-                    Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig][numCol+i].estRecouverte());
+                    //Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig][numCol+i].estRecouverte());
                     if(this.g[numLig][numCol+i].estRecouverte()==false){
                         nonRecouverte=true;                    
                     }
@@ -134,18 +133,17 @@ public class Plateau {
                     
                     i++;
                 }
-                //Ut.afficherSL("je suis sortie de la boucle");
                 break;
             case'v':
                 while(i<mot.length()){
-                    Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig+i][numCol].estRecouverte());
-                    if(this.g[numLig+i][numCol].estRecouverte()==false && nonRecouverte==false){
+                    //Ut.afficherSL("i : "+i+"lettreMot : "+mot.charAt(i)+", case recouverte ?"+this.g[numLig+i][numCol].estRecouverte());
+                    if(this.g[numLig+i][numCol].estRecouverte()==false){
                         nonRecouverte=true;
                     } 
                     else if(this.g[numLig+i][numCol].estRecouverte()==true && this.g[numLig+i][numCol].getLettre()==Character.toUpperCase(mot.charAt(i))){
                         verif = true;
                     }
-                    else if(this.g[numLig][numCol+i].estRecouverte()==true && this.g[numLig][numCol+i].getLettre()!=Character.toUpperCase(mot.charAt(i))){
+                    else if(this.g[numLig+i][numCol].estRecouverte()==true && this.g[numLig+i][numCol].getLettre()!=Character.toUpperCase(mot.charAt(i))){
                         verif = false;
                         break;
                     }
@@ -154,13 +152,14 @@ public class Plateau {
                 }
                 break;
         }
-        /*
-        Ut.afficherSL("nonRecouverte : "+nonRecouverte);
-        Ut.afficherSL("verif : "+verif);
-        */
+        
+        //Ut.afficherSL("nonRecouverte : "+nonRecouverte);
+        //Ut.afficherSL("verif : "+verif);
+        
         if(nonRecouverte==true && verif==true){
             condition=true;
         }
+        //Ut.afficherSL("zone Valide : "+verif);
         return condition;
         
     }
@@ -176,7 +175,7 @@ public class Plateau {
                 if(numCol+mot.length()<this.g.length){
                     if((numCol==0 || this.g[numLig][numCol-1].estRecouverte()==false) 
                       &&
-                      ((numCol==this.g.length-1 || this.g[numLig][numCol+mot.length()+1].estRecouverte()==false))){
+                      ((numCol+mot.length()==this.g.length-1 || this.g[numLig][numCol+mot.length()].estRecouverte()==false))){
                         verif = true;
                     }
                 }
@@ -185,14 +184,14 @@ public class Plateau {
                 if(numLig+mot.length()<this.g.length){
                     if((numLig == 0 || this.g[numLig-1][numCol].estRecouverte()==false ) 
                       &&
-                      (numLig==this.g.length-1 || this.g[numLig+mot.length()+1][numCol].estRecouverte()==false)){
+                      (numLig+mot.length()==this.g.length-1  || this.g[numLig+mot.length()][numCol].estRecouverte()==false)){
                         verif = true;
                     }
                 }
             break;
 
         }
-        Ut.afficherSL("LibreMot : "+verif);
+        //Ut.afficherSL("libreMot :"+verif);
         return verif;
     }
     
@@ -209,17 +208,23 @@ public class Plateau {
         boolean valide = false;
 
         //-----cas où le plateau est vide-------
-        if(this.g[(this.g.length/2)][(this.g.length/2)].estRecouverte()==false && mot.length()>2 ){
+        if(this.g[(this.g.length/2)][(this.g.length/2)].estRecouverte()==false && mot.length()>=2 ){
             //Ut.afficherSL("ici");
             switch(sens){
                 case 'h':
-                    if(numCol + mot.length()<(this.g.length) && numCol + mot.length()>=(this.g.length/2)+1&& numLig==(this.g.length/2)+1 && CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
-                        valide = true;                       
+                    if(numCol-1 + mot.length()<(15) &&
+                       numCol-1 + mot.length()>=(7)&& 
+                       numLig-1==7 &&
+                       CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
+                       valide = true;                       
                     }
                     break;
                 case 'v':
-                    if(numCol==(this.g.length/2)+1 && numLig + mot.length()<(this.g.length) && numLig + mot.length()>=(this.g.length/2)+1&& CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
-                        valide = true;                   
+                    if(numLig-1 + mot.length()<(15) &&
+                       numLig-1 + mot.length()>=(7)&&
+                       numCol-1==7 && 
+                       CoherenceMot(mot, e,numLig-1,numCol-1,sens)){
+                       valide = true;                 
                     }
                     break;
             }
@@ -229,15 +234,7 @@ public class Plateau {
 
             if(CoherenceMot(mot, e,numLig-1,numCol-1,sens)==true && libreMot(sens, mot, numLig-1, numCol-1)==true && zoneValide(sens, mot, numLig-1, numCol-1)==true ){
                 valide =true;
-            }
-            //Ut.afficherSL("valide : "+valide);   
-            /*
-            if(zoneValide(sens, mot, numLig, numCol)==true){
-                Ut.afficherSL("zoneValide : "+true);
-                
-            }
-            */
-            
+            }            
         }
         Ut.afficherSL("placementValide : "+valide);
         return valide;
@@ -255,18 +252,21 @@ public class Plateau {
         int motTriple = 0;
         switch(sens){
             case 'h':
-                for(int i=0;i<=mot.length();i++){
-                    switch(this.g[numLig][i].getCouleur()){
-                        case 2:
+                for(int i=0;i<mot.length();i++){
+                    //Ut.afficherSL("nbPoints  avant coup : "+nbPoints); test
+                    switch(this.g[numLig-1][numCol-1+i].getCouleur()){
+                        case 2:                           
                             nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]*2;
                             break;
                         case 3:
                             nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]*3;
                             break;
                         case 4:
+                            nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))];
                             motDouble++;
                             break;
                         case 5:
+                            nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))];
                             motTriple++;
                             break;
                         default:
@@ -274,11 +274,16 @@ public class Plateau {
                             break;
 
                     }
+                    /*test
+                    Ut.afficherSL("lettre : "+mot.charAt(i)+", valeur lettre :"+nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]+
+                    ",coef couleur"+this.g[numLig-1][numCol-1+i].getCouleur()+"coordonne : "+numLig+" "+numCol+"-1+"+i+", nbPoints : "+nbPoints);
+                    */
                 }
             break;
             case 'v':
-                for(int i=0;i<=mot.length();i++){
-                    switch(this.g[i][numCol].getCouleur()){
+                for(int i=0;i<mot.length();i++){
+                    //Ut.afficherSL(" nbPoints  avant coup: "+nbPoints); test
+                    switch(this.g[numLig-1+i][numCol-1].getCouleur()){
                         case 2:
                             nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]*2;
                             break;
@@ -286,23 +291,29 @@ public class Plateau {
                             nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]*3;
                             break;
                         case 4:
+                            nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))];
                             motDouble++;
                             break;
                         case 5:
+                            nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))];
                             motTriple++;
                             break;
                         default:
                             nbPoints+=nbPointsJet[Ut.alphaToIndex(mot.charAt(i))];
                         break;
                     }
-                }
+                    /*
+                    Ut.afficherSL("lettre : "+mot.charAt(i)+"valeur lettre :"+nbPointsJet[Ut.alphaToIndex(mot.charAt(i))]+
+                    ", coef couleur"+this.g[numLig+i-1][numCol-1].getCouleur()+this.g[numLig-1][numCol-1+i].getCouleur()+"coordonne : "+numLig+this.g[numLig-1][numCol-1+i].getCouleur()+"coordonne : "+numLig+" "+numCol+"-1+"+i+" "+numCol+" nbPoints : "+nbPoints);
+                    */
+                }             
             break;
         }
         if(motDouble>0){
-            nbPoints+=nbPoints*2*motDouble;
+            nbPoints=nbPoints*2*motDouble;
         }
         else if(motTriple>0){
-            nbPoints+=nbPoints*3*motTriple;
+            nbPoints=nbPoints*3*motTriple;
         }
         else if(mot.length()==7){
             nbPoints+=50;
@@ -324,22 +335,23 @@ public class Plateau {
     * à deux dimensions(case [][] g)
     */
     public int place(String mot, int numLig, int numCol, char sens, MEE e){
+        String motMinus = mot.toLowerCase(); // on convertit le mot minuscule pour être sûr de ne pas davoir d'erreur
         int compteur=0;
         //Ut.afficherSL(e.toString());//test pour voir si le chevalet se vide correctement au placement du mot
         switch(sens){
             case 'h':
-                for(int i=0;i<mot.length();i++){
+                for(int i=0;i<motMinus.length();i++){
                     if(this.g[numLig-1][numCol-1+i].estRecouverte()==false){
-                        this.g[numLig-1][numCol-1+i].setLettre(mot.charAt(i));
+                        this.g[numLig-1][numCol-1+i].setLettre(motMinus.charAt(i));
                         compteur++;
-                        e.retire(Ut.alphaToIndex(mot.charAt(i)));
+                        e.retire(Ut.alphaToIndex(motMinus.charAt(i)));
                     }
                 }
                 break;
             case 'v':
-                for(int i=0;i<mot.length();i++){
+                for(int i=0;i<motMinus.length();i++){
                     if(this.g[numLig-1+i][numCol-1].estRecouverte()==false){
-                        this.g[numLig-1+i][numCol-1].setLettre(mot.charAt(i));
+                        this.g[numLig-1+i][numCol-1].setLettre(motMinus.charAt(i));
                         compteur++;
                         e.retire(Ut.alphaToIndex(mot.charAt(i)));
                         //Ut.afficher(e.toString());
