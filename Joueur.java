@@ -71,7 +71,7 @@ public class Joueur {
         int nbJ = nbJetons;
         int totS=s.getNbToEx();
         int totChe=this.chevalet.getNbToEx();
-        if(s.getNbToEx()>nbJ){ // cas où le sac peut donner le nombre de jeton demandé
+        if(s.getNbToEx()>=nbJ){ // cas où le sac peut donner le nombre de jeton demandé
             for(int i=0; i<7-totChe; i++){
                 this.chevalet.ajoute(s.retireAleat());
             }
